@@ -1,0 +1,44 @@
+{
+  "pages": {
+    "/_not-found": [
+      "static/chunks/webpack-228458521f4ebf13.js",
+      "static/chunks/fd9d1056-2f041acfb3a5e26d.js",
+      "static/chunks/938-09f3807e0ee56792.js",
+      "static/chunks/main-app-b0f92c6224dd438e.js",
+      "static/chunks/app/_not-found-436617ed7370abbd.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack-228458521f4ebf13.js",
+      "static/chunks/fd9d1056-2f041acfb3a5e26d.js",
+      "static/chunks/938-09f3807e0ee56792.js",
+      "static/chunks/main-app-b0f92c6224dd438e.js",
+      "static/chunks/279-3bc9ca59c13babe6.js",
+      "static/css/a122d2ac5ebd3061.css",
+      "static/chunks/app/layout-7786f1a6903f205b.js"
+    ],
+    "/contato/page": [
+      "static/chunks/webpack-228458521f4ebf13.js",
+      "static/chunks/fd9d1056-2f041acfb3a5e26d.js",
+      "static/chunks/938-09f3807e0ee56792.js",
+      "static/chunks/main-app-b0f92c6224dd438e.js",
+      "static/chunks/app/contato/page-189f5738a88d1abb.js"
+    ],
+    "/imoveis/page": [
+      "static/chunks/webpack-228458521f4ebf13.js",
+      "static/chunks/fd9d1056-2f041acfb3a5e26d.js",
+      "static/chunks/938-09f3807e0ee56792.js",
+      "static/chunks/main-app-b0f92c6224dd438e.js",
+      "static/chunks/986-00d281f6565a0f56.js",
+      "static/chunks/640-cba83a48e1de558a.js",
+      "static/chunks/app/imoveis/page-388a23c2e38a500c.js"
+    ],
+    "/page": [
+      "static/chunks/webpack-228458521f4ebf13.js",
+      "static/chunks/fd9d1056-2f041acfb3a5e26d.js",
+      "static/chunks/938-09f3807e0ee56792.js",
+      "static/chunks/main-app-b0f92c6224dd438e.js",
+      "static/chunks/986-00d281f6565a0f56.js",
+      "static/chunks/app/page-3a869e501a5d3394.js"
+    ]
+  }
+}
