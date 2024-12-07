@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['adminmediaplus1.websiteseguro.com', 'picsum.photos'],
+    domains: ['adminmediaplus1.websiteseguro.com', 'picsum.photos', 'external-domain.com'],
     remotePatterns: [
       {
         protocol: 'https',

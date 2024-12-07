@@ -12,24 +12,28 @@ export async function GET(
   try {
     const id = params.id
 
+    if (!id) {
+      return NextResponse.json(
+        { error: 'ID do imóvel não fornecido' },
+        { status: 400 }
+      )
+    }
+
     // Get property details
     const [rows] = await connection.execute(
       `SELECT i.*, 
-        (SELECT JSON_ARRAYAGG(
-          JSON_OBJECT(
-            'id', g.idgaleriaimovel,
-            'imagem', g.imagem
-          )
-        ) 
-        FROM galeriaimovel g 
-        WHERE g.imovel_idimovel = i.idimovel
+        GROUP_CONCAT(
+          CONCAT('{"id":', g.idgaleriaimovel, ',"imagem":"', g.imagem, '"}')
         ) as imagens
        FROM imovel i 
-       WHERE i.idimovel = ?`,
+       LEFT JOIN galeriaimovel g ON g.imovel_idimovel = i.idimovel
+       WHERE i.idimovel = ?
+       GROUP BY i.idimovel`,
       [id]
     )
 
     if (!rows || (rows as any[]).length === 0) {
+      await closeDb(connection)
       return NextResponse.json(
         { error: 'Imóvel não encontrado' },
         { status: 404 }
@@ -37,7 +41,18 @@ export async function GET(
     }
 
     const imovel = (rows as any[])[0]
-    imovel.imagens = JSON.parse(imovel.imagens || '[]')
+    
+    try {
+      // Convert the GROUP_CONCAT result to a proper JSON array
+      imovel.imagens = imovel.imagens 
+        ? JSON.parse(`[${imovel.imagens}]`)
+        : []
+    } catch (jsonError) {
+      console.error('Error parsing images JSON:', jsonError)
+      imovel.imagens = []
+    }
+
+    await closeDb(connection)
 
     // Add cache headers
     return NextResponse.json(imovel, {
@@ -47,11 +62,13 @@ export async function GET(
     })
   } catch (error: any) {
     console.error('Database error:', error)
+    await closeDb(connection)
     return NextResponse.json(
-      { error: 'Erro interno do servidor', details: error.message },
+      { 
+        error: 'Erro interno do servidor',
+        message: error.message || 'Ocorreu um erro ao buscar os dados do imóvel'
+      },
       { status: 500 }
     )
-  } finally {
-    await closeDb(connection)
   }
 }

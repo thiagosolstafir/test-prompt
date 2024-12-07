@@ -1,18 +1,18 @@
 import useSWR from 'swr'
 
-interface Imovel {
+interface Property {
   idimovel: number
   titulo: string
   descricao: string
   preco: number
   endereco: string
   imagem: string
-  tipo: string
+  transacao_idtransacao: string
+  tipo_transacao: string
   metragem: number
   quarto: number
   banheiro: number
   vaga: number
-  transacao_idtransacao: number
 }
 
 interface PaginationData {
@@ -23,58 +23,48 @@ interface PaginationData {
 }
 
 interface ApiResponse {
-  items: Imovel[]
+  items: Property[]
   pagination: PaginationData
+}
+
+interface UseImoveisProps {
+  page?: number
 }
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
   if (!res.ok) {
-    throw new Error('Falha ao carregar imóveis')
+    const error = new Error('Failed to fetch data')
+    error.message = await res.text()
+    throw error
   }
   return res.json()
 }
 
-export function useImoveis(page: number, tipo?: string) {
-  const queryParams = new URLSearchParams({
-    page: page.toString(),
-    ...(tipo && { tipo }),
-  })
-
-  const { data, error, isLoading, mutate } = useSWR<ApiResponse>(
-    `/api/imoveis?${queryParams}`,
-    fetcher,
-    {
-      revalidateOnFocus: false, // Não revalidar quando a janela ganhar foco
-      revalidateOnReconnect: true, // Revalidar quando reconectar à internet
-      refreshInterval: 300000, // Revalidar a cada 5 minutos
-      dedupingInterval: 30000, // Deduplicar requisições em um intervalo de 30 segundos
-    }
+export function useImoveis({
+  page = 1,
+}: UseImoveisProps = {}) {
+  const { data, error } = useSWR<ApiResponse>(
+    `/api/imoveis?page=${page}`,
+    fetcher
   )
 
   return {
-    imoveis: data?.items ?? [],
-    pagination: data?.pagination,
-    isLoading,
-    isError: error,
-    mutate,
+    data,
+    isLoading: !error && !data,
+    error
   }
 }
 
 export function useImovel(id: number | null) {
-  const { data, error, isLoading } = useSWR<Imovel>(
+  const { data, error } = useSWR<Property>(
     id ? `/api/imoveis/${id}` : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-      dedupingInterval: 60000, // Cache por 1 minuto
-    }
+    fetcher
   )
 
   return {
-    imovel: data,
-    isLoading,
-    isError: error,
+    property: data,
+    isLoading: !error && !data,
+    error
   }
 }
